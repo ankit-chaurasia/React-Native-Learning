@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Text, View, StyleSheet, Button, Alert } from 'react-native';
 import NumberContainer from '../NumberContainer';
 import Card from '../Card';
@@ -14,17 +14,21 @@ const generateRandomBetween = (min, max, exclude) => {
   }
 };
 
-const GameScreen = (props) => {
-  const [currentGuess, setCurrentGuess] = useState(generateRandomBetween(1, 100, props.userChoice));
-
+const GameScreen = ({ userChoice, style, onGameOver }) => {
+  const [currentGuess, setCurrentGuess] = useState(generateRandomBetween(1, 100, userChoice));
+  const [rounds, setRounds] = useState(0);
   const currentLow = useRef(1);
   const currentHigh = useRef(100);
 
+  useEffect(() => {
+    // Runs after every render cycle
+    if (currentGuess === userChoice) {
+      onGameOver(rounds);
+    }
+  }, [currentGuess, userChoice, onGameOver]);
+
   const nextGuessHandler = (direction) => {
-    if (
-      (direction === 'lower' && currentGuess < props.userChoice) ||
-      (direction === 'greater' && currentGuess > props.userChoice)
-    ) {
+    if ((direction === 'lower' && currentGuess < userChoice) || (direction === 'greater' && currentGuess > userChoice)) {
       Alert.alert(`Don't lie!`, 'You know that this is wrong...', [
         {
           text: 'Sorry!',
@@ -39,11 +43,12 @@ const GameScreen = (props) => {
       currentLow.current = currentGuess;
     }
     const nextGuess = generateRandomBetween(currentLow.current, currentHigh.current, currentGuess);
+    setRounds((currRounds) => currRounds + 1);
     setCurrentGuess(nextGuess);
   };
 
   return (
-    <View style={{ ...styles.screen, ...props.style }}>
+    <View style={{ ...styles.screen, ...style }}>
       <Text>Opponent's Guess</Text>
       <NumberContainer>{currentGuess}</NumberContainer>
       <Card style={styles.buttonContainer}>
