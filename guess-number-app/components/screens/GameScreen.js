@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Text, View, StyleSheet, Alert, ScrollView } from 'react-native';
+import { Text, View, StyleSheet, Alert, ScrollView, FlatList } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import NumberContainer from '../NumberContainer';
 import Card from '../Card';
@@ -53,11 +53,11 @@ const GameScreen = ({ userChoice, style, onGameOver }) => {
     setCurrentGuess(nextGuess);
   };
 
-  const renderListItem = (value, numOfRound) => {
+  const renderListItem = (listLength, { index, item }) => {
     return (
-      <View key={value} style={styles.listItem}>
-        <BodyText>#{numOfRound}</BodyText>
-        <BodyText>{value}</BodyText>
+      <View style={styles.listItem}>
+        <BodyText>#{listLength - index}</BodyText>
+        <BodyText>{item}</BodyText>
       </View>
     );
   };
@@ -75,9 +75,15 @@ const GameScreen = ({ userChoice, style, onGameOver }) => {
         </MainButton>
       </Card>
       <View style={styles.listContainer}>
-        <ScrollView contentContainerStyle={styles.list}>
+        {/* <ScrollView contentContainerStyle={styles.list}>
           {pastGuesses.map((guess, index) => renderListItem(guess, pastGuesses.length - index))}
-        </ScrollView>
+        </ScrollView> */}
+        <FlatList
+          keyExtractor={(item) => item.toString()}
+          data={pastGuesses}
+          renderItem={renderListItem.bind(null, pastGuesses.length)}
+          contentContainerStyle={styles.list}
+        />
       </View>
     </View>
   );
@@ -98,11 +104,11 @@ const styles = StyleSheet.create({
   },
   listContainer: {
     flex: 1,
-    width: '80%',
+    width: '60%',
   },
   list: {
     flexGrow: 1,
-    alignItems: 'center',
+    // alignItems: 'center',
     justifyContent: 'flex-end',
   },
   listItem: {
@@ -112,8 +118,8 @@ const styles = StyleSheet.create({
     marginVertical: 10,
     backgroundColor: '#fff',
     flexDirection: 'row',
-    justifyContent: 'space-around',
-    width: '60%',
+    justifyContent: 'space-between',
+    width: '100%',
   },
 });
 
