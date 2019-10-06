@@ -4,6 +4,8 @@ import Card from '../Card';
 import Colors from '../../constants/colors';
 import Input from '../Input';
 import NumberContainer from '../NumberContainer';
+import BodyText from '../BodyText';
+import TitleText from '../TitleText';
 
 const StartGameScreen = (props) => {
   const [enteredValue, setEnteredValue] = useState('');
@@ -36,9 +38,9 @@ const StartGameScreen = (props) => {
   return (
     <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
       <View style={styles.screen}>
-        <Text style={styles.title}>Start a New Game!</Text>
+        <TitleText style={styles.title}>Start a New Game!</TitleText>
         <Card style={styles.inputContainer}>
-          <Text>Select a Number</Text>
+          <BodyText>Select a Number</BodyText>
           <Input
             style={styles.input}
             autoCapitalize='none'
@@ -76,7 +78,7 @@ const styles = StyleSheet.create({
     padding: 10,
     alignItems: 'center',
   },
-  title: { fontSize: 20, marginVertical: 10 },
+  title: { marginVertical: 10 },
   inputContainer: {
     width: 300,
     maxWidth: '80%',
