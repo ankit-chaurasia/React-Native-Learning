@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Text, View, StyleSheet, Alert } from 'react-native';
+import { Text, View, StyleSheet, Alert, ScrollView } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import NumberContainer from '../NumberContainer';
 import Card from '../Card';
@@ -18,15 +18,16 @@ const generateRandomBetween = (min, max, exclude) => {
 };
 
 const GameScreen = ({ userChoice, style, onGameOver }) => {
-  const [currentGuess, setCurrentGuess] = useState(generateRandomBetween(1, 100, userChoice));
-  const [rounds, setRounds] = useState(0);
+  const initialGuess = generateRandomBetween(1, 100, userChoice);
+  const [currentGuess, setCurrentGuess] = useState(initialGuess);
+  const [pastGuesses, setPastGuesses] = useState([initialGuess]);
   const currentLow = useRef(1);
   const currentHigh = useRef(100);
 
   useEffect(() => {
     // Runs after every render cycle
     if (currentGuess === userChoice) {
-      onGameOver(rounds);
+      onGameOver(pastGuesses.length);
     }
   }, [currentGuess, userChoice, onGameOver]);
 
@@ -43,10 +44,11 @@ const GameScreen = ({ userChoice, style, onGameOver }) => {
     if (direction === 'lower') {
       currentHigh.current = currentGuess;
     } else {
-      currentLow.current = currentGuess;
+      currentLow.current = currentGuess + 1;
     }
     const nextGuess = generateRandomBetween(currentLow.current, currentHigh.current, currentGuess);
-    setRounds((currRounds) => currRounds + 1);
+    // setRounds((currRounds) => currRounds + 1);
+    setPastGuesses((currPastGuesses) => [nextGuess, ...currPastGuesses]);
     setCurrentGuess(nextGuess);
   };
 
@@ -62,6 +64,13 @@ const GameScreen = ({ userChoice, style, onGameOver }) => {
           <Ionicons name='md-add' size={24} color={'#fff'} />
         </MainButton>
       </Card>
+      <ScrollView>
+        {pastGuesses.map((guess) => (
+          <View key={guess}>
+            <Text>{guess}</Text>
+          </View>
+        ))}
+      </ScrollView>
     </View>
   );
 };
