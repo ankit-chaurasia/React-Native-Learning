@@ -5,6 +5,7 @@ import NumberContainer from '../NumberContainer';
 import Card from '../Card';
 import DefaultStyles from '../../constants/DefaultStyles';
 import MainButton from '../MainButton';
+import BodyText from '../BodyText';
 
 const generateRandomBetween = (min, max, exclude) => {
   min = Math.ceil(min);
@@ -52,6 +53,15 @@ const GameScreen = ({ userChoice, style, onGameOver }) => {
     setCurrentGuess(nextGuess);
   };
 
+  const renderListItem = (value, numOfRound) => {
+    return (
+      <View key={value} style={styles.listItem}>
+        <BodyText>#{numOfRound}</BodyText>
+        <BodyText>{value}</BodyText>
+      </View>
+    );
+  };
+
   return (
     <View style={{ ...styles.screen, ...style }}>
       <Text style={DefaultStyles.titleText}>Opponent's Guess</Text>
@@ -64,13 +74,9 @@ const GameScreen = ({ userChoice, style, onGameOver }) => {
           <Ionicons name='md-add' size={24} color={'#fff'} />
         </MainButton>
       </Card>
-      <ScrollView>
-        {pastGuesses.map((guess) => (
-          <View key={guess}>
-            <Text>{guess}</Text>
-          </View>
-        ))}
-      </ScrollView>
+      <View style={styles.list}>
+        <ScrollView>{pastGuesses.map((guess, index) => renderListItem(guess, pastGuesses.length - index))}</ScrollView>
+      </View>
     </View>
   );
 };
@@ -87,6 +93,19 @@ const styles = StyleSheet.create({
     margin: 20,
     width: 400,
     maxWidth: '90%',
+  },
+  list: {
+    flex: 1,
+    width: '80%',
+  },
+  listItem: {
+    borderColor: '#ccc',
+    borderWidth: 1,
+    padding: 15,
+    marginVertical: 10,
+    backgroundColor: '#fff',
+    flexDirection: 'row',
+    justifyContent: 'space-around',
   },
 });
 
