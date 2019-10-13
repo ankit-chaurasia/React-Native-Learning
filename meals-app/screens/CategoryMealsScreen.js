@@ -8,7 +8,7 @@ const CategoryMealsScreen = ({ navigation }) => {
   const displayedMeals = MEALS.filter((meal) => meal.categoryIds.includes(catId));
 
   const renderMealItem = ({ item }) => {
-    const { title, duration, affordibility, complexity, imageUrl } = item;
+    const { title, duration, affordibility, complexity, imageUrl, id } = item;
     return (
       <MealItem
         title={title}
@@ -16,7 +16,14 @@ const CategoryMealsScreen = ({ navigation }) => {
         affordibility={affordibility}
         complexity={complexity}
         imageUrl={imageUrl}
-        onSelectMeal={() => {}}
+        onSelectMeal={() =>
+          navigation.navigate({
+            routeName: 'MealDetail',
+            params: {
+              mealId: id,
+            },
+          })
+        }
       />
     );
   };
