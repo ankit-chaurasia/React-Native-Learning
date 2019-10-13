@@ -40,7 +40,6 @@ const tabScreenConfig = {
     screen: MealsNavigator,
     navigationOptions: {
       tabBarIcon: ({ tintColor }) => {
-        console.log('tabInfo', tintColor);
         return <Ionicons name='ios-restaurant' size={25} color={tintColor} />;
       },
       tabBarColor: Colors.primaryColor,
