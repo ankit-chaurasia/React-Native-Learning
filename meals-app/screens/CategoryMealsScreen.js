@@ -1,6 +1,7 @@
 import React from 'react';
-import { View, Text, StyleSheet, Button } from 'react-native';
+import { View, Text, StyleSheet, Button, Platform } from 'react-native';
 import { CATEGORIES } from '../data/dummy-data';
+import Colors from '../constants/Colors';
 
 const CategoryMealsScreen = ({ navigation }) => {
   const catId = navigation.getParam('categoryId');
@@ -20,6 +21,18 @@ const CategoryMealsScreen = ({ navigation }) => {
       <Button title='Go Back' onPress={() => navigation.pop()} />
     </View>
   );
+};
+
+CategoryMealsScreen.navigationOptions = ({ navigation }) => {
+  const catId = navigation.getParam('categoryId');
+  const { title } = CATEGORIES.find((cat) => cat.id === catId);
+  return {
+    headerTitle: title,
+    headerStyle: {
+      backgroundColor: Platform.OS === 'android' ? Colors.primaryColor : '',
+    },
+    headerTintColor: Platform.OS === 'android' ? '#fff' : Colors.primaryColor,
+  };
 };
 
 const styles = StyleSheet.create({
