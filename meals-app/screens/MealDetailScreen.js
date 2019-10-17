@@ -2,7 +2,7 @@ import React from 'react';
 import { View, Text, StyleSheet, Button } from 'react-native';
 import { HeaderButtons, Item } from 'react-navigation-header-buttons';
 import { MEALS } from '../data/dummy-data';
-import CustomHeaderButton from '../components/HeaderButton';
+import CustomHeaderButton from '../components/CustomHeaderButton';
 
 const MealDetailScreen = (props) => {
   const mealId = props.navigation.getParam('mealId');
