@@ -1,28 +1,42 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Item, HeaderButtons } from 'react-navigation-header-buttons';
 import { View, Text, StyleSheet, Switch, Platform } from 'react-native';
 import CustomHeaderButton from '../components/CustomHeaderButton';
 import Colors from '../constants/Colors';
 
-const FilterSwitch = (props) => {
+const FilterSwitch = ({ label, state, onChange }) => {
   return (
     <View style={styles.filterContainer}>
-      <Text>{props.label}</Text>
+      <Text>{label}</Text>
       <Switch
         trackColor={{ true: Colors.primaryColor }}
         thumbColor={Platform.OS === 'android' ? Colors.primaryColor : ''}
-        value={props.state}
-        onValueChange={props.onChange}
+        value={state}
+        onValueChange={onChange}
       />
     </View>
   );
 };
 
-const FilterScreen = (props) => {
+const FilterScreen = ({ navigation }) => {
   const [isGlutenFree, setisGlutenFree] = useState(false);
   const [isLactoseFree, setIsLactoseFree] = useState(false);
   const [isVegan, setIsVegan] = useState(false);
   const [isVegetrian, setIsVegetrian] = useState(false);
+
+  const saveFilters = useCallback(() => {
+    const appliedFilters = {
+      isGlutenFree,
+      isLactoseFree,
+      isVegan,
+      isVegetrian,
+    };
+    console.log(appliedFilters);
+  }, [isGlutenFree, isLactoseFree, isVegan, isVegetrian]);
+
+  useEffect(() => {
+    navigation.setParams({ save: saveFilters });
+  }, [saveFilters]);
 
   return (
     <View style={styles.screen}>
@@ -41,6 +55,11 @@ FilterScreen.navigationOptions = ({ navigation }) => {
     headerLeft: (
       <HeaderButtons HeaderButtonComponent={CustomHeaderButton}>
         <Item title='Menu' iconName='ios-menu' onPress={() => navigation.toggleDrawer()} />
+      </HeaderButtons>
+    ),
+    headerRight: (
+      <HeaderButtons HeaderButtonComponent={CustomHeaderButton}>
+        <Item title='Save' iconName='ios-save' onPress={navigation.getParam('save')} />
       </HeaderButtons>
     ),
   };
