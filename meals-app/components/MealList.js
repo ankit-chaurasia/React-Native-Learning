@@ -17,6 +17,7 @@ const MealList = ({ listData, navigation }) => {
             routeName: 'MealDetail',
             params: {
               mealId: id,
+              mealTitle: title,
             },
           })
         }
