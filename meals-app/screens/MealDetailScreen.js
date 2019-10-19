@@ -1,9 +1,10 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useCallback } from 'react';
 import { ScrollView, View, Text, StyleSheet, Image } from 'react-native';
 import { HeaderButtons, Item } from 'react-navigation-header-buttons';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import CustomHeaderButton from '../components/CustomHeaderButton';
 import DefaultText from '../components/DefaultText';
+import { toggleFavourite } from '../store/actions/meals';
 
 const ListItem = (props) => {
   return (
@@ -17,13 +18,17 @@ const MealDetailScreen = (props) => {
   const availableMeals = useSelector((state) => state.meals.meals);
 
   const mealId = props.navigation.getParam('mealId');
-  const { title, duration, complexity, affordibility, imageUrl, ingredients, steps } = availableMeals.find(
-    (meal) => meal.id === mealId,
-  );
+  const { duration, complexity, affordibility, imageUrl, ingredients, steps } = availableMeals.find((meal) => meal.id === mealId);
 
-  // useEffect(() => {
-  //   props.navigation.setParams({ mealTitle: title });
-  // }, [title]);
+  const dispatch = useDispatch();
+
+  const toggleFavouriteHandler = useCallback(() => {
+    dispatch(toggleFavourite(mealId));
+  }, [dispatch, mealId]);
+
+  useEffect(() => {
+    props.navigation.setParams({ toggleFav: toggleFavouriteHandler });
+  }, [toggleFavouriteHandler]);
 
   return (
     <ScrollView>
@@ -47,17 +52,12 @@ const MealDetailScreen = (props) => {
 
 MealDetailScreen.navigationOptions = ({ navigation }) => {
   const title = navigation.getParam('mealTitle');
+  const toggleFavourite = navigation.getParam('toggleFav');
   return {
     headerTitle: title,
     headerRight: (
       <HeaderButtons HeaderButtonComponent={CustomHeaderButton}>
-        <Item
-          title='Favourite'
-          iconName='ios-star'
-          onPress={() => {
-            console.log('Mark as favourite!!');
-          }}
-        />
+        <Item title='Favourite' iconName='ios-star' onPress={toggleFavourite} />
       </HeaderButtons>
     ),
   };

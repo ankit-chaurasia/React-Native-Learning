@@ -31,7 +31,6 @@ const FilterScreen = ({ navigation }) => {
       isVegan,
       isVegetrian,
     };
-    console.log(appliedFilters);
   }, [isGlutenFree, isLactoseFree, isVegan, isVegetrian]);
 
   useEffect(() => {
