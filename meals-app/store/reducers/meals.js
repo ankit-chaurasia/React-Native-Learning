@@ -1,5 +1,5 @@
 import { MEALS } from '../../data/dummy-data';
-import { TOGGLE_FAVOURITE } from '../actions/meals';
+import { TOGGLE_FAVOURITE, SET_FILTERS } from '../actions/meals';
 
 const initialState = {
   meals: MEALS,
@@ -21,6 +21,28 @@ const mealsReducers = (state = initialState, action) => {
         });
         return { ...state, favouriteMeals: state.favouriteMeals.concat(meal) };
       }
+    case SET_FILTERS:
+      //   isGlutenFree,
+      // isVegan,
+      // isVegetarian,
+      // isLactoseFree,
+      const { isGlutenFree, isLactoseFree, isVegan, isVegetrian } = action.filters;
+      const filteredMeals = state.meals.filter((meal) => {
+        if (isGlutenFree && !meal.isGlutenFree) {
+          return false;
+        }
+        if (isLactoseFree && !meal.isLactoseFree) {
+          return false;
+        }
+        if (isVegan && !meal.isVegan) {
+          return false;
+        }
+        if (isVegetrian && !meal.isVegetrian) {
+          return false;
+        }
+        return true;
+      });
+      return { ...state, filteredMeals };
     default:
       return state;
   }
